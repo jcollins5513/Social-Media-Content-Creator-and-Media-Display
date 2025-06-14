@@ -1,17 +1,25 @@
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { api } from '../services/api';
+import { VehicleCardSkeletonGrid } from '../components/VehicleCardSkeleton';
+import type { Vehicle } from '../types/Vehicle';
 
 const VehicleListPage = () => {
-  const { data: vehicles, isLoading, error } = useQuery({
+  const { data: vehicles, isLoading, error } = useQuery<Vehicle[]>({
     queryKey: ['vehicles'],
     queryFn: () => api.getVehicles().then(res => res.data),
   });
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center min-h-[50vh]">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      <div className="py-8">
+        <div className="sm:flex sm:items-center mb-8">
+          <div className="sm:flex-auto">
+            <div className="h-8 bg-gray-300 rounded w-1/4 mb-4 animate-pulse"></div>
+            <div className="h-4 bg-gray-300 rounded w-2/3 animate-pulse"></div>
+          </div>
+        </div>
+        <VehicleCardSkeletonGrid />
       </div>
     );
   }
@@ -76,7 +84,7 @@ const VehicleListPage = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200 bg-white">
-                  {vehicles?.map((vehicle: any) => (
+                  {vehicles?.map((vehicle: Vehicle) => (
                     <tr key={vehicle.id}>
                       <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
                         <div className="flex items-center">

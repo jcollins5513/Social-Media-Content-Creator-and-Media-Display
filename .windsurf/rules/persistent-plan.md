@@ -4,7 +4,7 @@ trigger: manual
 
 ## 🧠 Workspace Rule: Persistent Planning Across Sessions
 
-Windsurf clears memory and plans with each new chat. To maintain continuity across sessions, follow this rule:
+Since Windsurf clears memory and plans with each new chat. To maintain continuity across sessions, follow this rule:
 
 - In addition to creating `plan.md` for the current session's scope and tasks,  
   **also create or append to a file named `complete-plan.md`.**
@@ -16,4 +16,4 @@ Windsurf clears memory and plans with each new chat. To maintain continuity acro
 
    ```markdown
    ## Plan – YYYY-MM-DD HH:MM
-   [paste full contents of plan.md here]
+ 

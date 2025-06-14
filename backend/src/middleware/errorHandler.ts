@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import { databaseErrorHandler } from './databaseErrorHandler';
 
 interface ErrorWithStatus extends Error {
   statusCode?: number;

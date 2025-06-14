@@ -2,16 +2,20 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '../services/api';
 import { useState } from 'react';
+import { exportToTextFile, exportToMarkdown, exportToHTML } from '../utils/exportUtils';
+import Panorama360Viewer from '../components/Panorama360Viewer';
+import VehicleDetailSkeleton from '../components/VehicleDetailSkeleton';
+import type { Vehicle, VehicleContent } from '../types/Vehicle';
 
 const VehicleDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('details');
+  const [activeTab, setActiveTab] = useState<string>('details');
   const [isGenerating, setIsGenerating] = useState(false);
-  const [generatedContent, setGeneratedContent] = useState<Record<string, string>>({});
+  const [generatedContent, setGeneratedContent] = useState<VehicleContent>({});
   const [selectedTemplate, setSelectedTemplate] = useState('manager-special');
 
-  const { data: vehicle, isLoading, error } = useQuery({
+  const { data: vehicle, isLoading, error } = useQuery<Vehicle>({
     queryKey: ['vehicle', id],
     queryFn: () => api.getVehicleById(id!).then(res => res.data),
     enabled: !!id,
@@ -48,11 +52,7 @@ const VehicleDetailPage = () => {
   };
 
   if (isLoading) {
-    return (
-      <div className="flex justify-center items-center min-h-[50vh]">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-      </div>
-    );
+    return <VehicleDetailSkeleton />;
   }
 
   if (error || !vehicle) {
@@ -86,7 +86,7 @@ const VehicleDetailPage = () => {
   );
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 px-4 sm:px-6 lg:px-0">
       <div>
         <nav className="sm:hidden" aria-label="Back">
           <Link 
@@ -140,7 +140,7 @@ const VehicleDetailPage = () => {
         </nav>
       </div>
 
-      <div className="lg:grid lg:grid-cols-3 lg:gap-8">
+      <div className="lg:grid lg:grid-cols-3 lg:gap-8 space-y-6 lg:space-y-0">
         <div className="lg:col-span-2">
           <div className="aspect-w-3 aspect-h-2 overflow-hidden rounded-lg">
             {vehicle.images?.[0] ? (
@@ -157,12 +157,12 @@ const VehicleDetailPage = () => {
           </div>
           
           {has360Images && (
-            <div className="mt-4 flex items-center text-sm text-blue-600">
-              <svg className="mr-1.5 h-5 w-5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
-                <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
-              </svg>
-              <span>360° view available</span>
+            <div className="mt-4">
+              <h3 className="text-sm font-medium text-gray-700 mb-2">360° View</h3>
+              <Panorama360Viewer 
+                images={vehicle.images || []} 
+                alt={`${vehicle.year} ${vehicle.make} ${vehicle.model}`} 
+              />
             </div>
           )}
           
@@ -236,7 +236,7 @@ const VehicleDetailPage = () => {
           </div>
         </div>
         
-        <div className="mt-8 lg:mt-0">
+        <div className="mt-8 lg:mt-0 md:mt-4 sm:mt-2">
           <div className="bg-white shadow overflow-hidden sm:rounded-lg">
             <div className="px-4 py-5 sm:px-6 border-b border-gray-200">
               <h3 className="text-lg leading-6 font-medium text-gray-900">
@@ -316,6 +316,8 @@ const VehicleDetailPage = () => {
                         value={selectedTemplate}
                         onChange={(e) => setSelectedTemplate(e.target.value)}
                         className="flex-1 min-w-0 block w-full px-3 py-2 rounded-md border border-gray-300 shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                        title="Email template selection"
+                        aria-label="Select email template"
                       >
                         <option value="manager-special">Manager's Special</option>
                         <option value="holiday-sale">Holiday Sale</option>
@@ -345,19 +347,90 @@ const VehicleDetailPage = () => {
                             <h4 className="text-sm font-medium text-gray-700 capitalize">
                               {platform === 'youtube' ? 'YouTube' : platform.charAt(0).toUpperCase() + platform.slice(1)}
                             </h4>
-                            <button
-                              onClick={() => {
-                                navigator.clipboard.writeText(content);
-                                // Optional: Show a toast notification
-                              }}
-                              className="text-gray-400 hover:text-gray-500"
-                              title="Copy to clipboard"
-                            >
-                              <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                <path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" />
-                                <path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z" />
-                              </svg>
-                            </button>
+                            <div className="flex items-center space-x-2">
+                              <button
+                                onClick={() => {
+                                  navigator.clipboard.writeText(content);
+                                  // Show feedback (could use a toast library in real app)
+                                  alert('Copied to clipboard!');
+                                }}
+                                className="text-gray-400 hover:text-gray-500"
+                                title="Copy to clipboard"
+                              >
+                                <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                  <path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" />
+                                  <path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z" />
+                                </svg>
+                              </button>
+                              <div className="relative inline-block text-left">
+                                <div>
+                                  <button
+                                    type="button"
+                                    className="text-gray-400 hover:text-gray-500 flex items-center"
+                                    id={`export-menu-${platform}`}
+                                    aria-expanded="true"
+                                    aria-haspopup="true"
+                                    title="Export options"
+                                    onClick={() => {
+                                      // Toggle dropdown menu for export options
+                                      const exportMenu = document.getElementById(`export-dropdown-${platform}`);
+                                      if (exportMenu) {
+                                        exportMenu.classList.toggle('hidden');
+                                      }
+                                    }}
+                                  >
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                      <path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd" />
+                                    </svg>
+                                  </button>
+                                </div>
+                                <div 
+                                  id={`export-dropdown-${platform}`} 
+                                  className="hidden absolute right-0 z-10 mt-2 w-36 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" 
+                                  role="menu" 
+                                  aria-orientation="vertical" 
+                                  aria-labelledby={`export-menu-${platform}`} 
+                                  tabIndex={-1}
+                                >
+                                  <div className="py-1" role="none">
+                                    <button
+                                      onClick={() => {
+                                        exportToTextFile(content, `${vehicle.make}-${vehicle.model}-${platform}.txt`);
+                                        document.getElementById(`export-dropdown-${platform}`)?.classList.toggle('hidden');
+                                      }}
+                                      className="text-gray-700 block px-4 py-2 text-sm w-full text-left hover:bg-gray-100"
+                                      role="menuitem"
+                                      tabIndex={-1}
+                                    >
+                                      Export as .txt
+                                    </button>
+                                    <button
+                                      onClick={() => {
+                                        exportToMarkdown(content, `${vehicle.make}-${vehicle.model}-${platform}.md`);
+                                        document.getElementById(`export-dropdown-${platform}`)?.classList.toggle('hidden');
+                                      }}
+                                      className="text-gray-700 block px-4 py-2 text-sm w-full text-left hover:bg-gray-100"
+                                      role="menuitem"
+                                      tabIndex={-1}
+                                    >
+                                      Export as .md
+                                    </button>
+                                    <button
+                                      onClick={() => {
+                                        const title = `${vehicle.year} ${vehicle.make} ${vehicle.model} - ${platform.charAt(0).toUpperCase() + platform.slice(1)} Content`;
+                                        exportToHTML(content, title, `${vehicle.make}-${vehicle.model}-${platform}`);
+                                        document.getElementById(`export-dropdown-${platform}`)?.classList.toggle('hidden');
+                                      }}
+                                      className="text-gray-700 block px-4 py-2 text-sm w-full text-left hover:bg-gray-100"
+                                      role="menuitem"
+                                      tabIndex={-1}
+                                    >
+                                      Export as .html
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
                           </div>
                           <div className="mt-2 text-sm text-gray-700 whitespace-pre-line bg-white p-3 rounded border border-gray-200">
                             {content}

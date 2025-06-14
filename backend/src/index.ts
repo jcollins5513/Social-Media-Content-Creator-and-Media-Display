@@ -2,8 +2,9 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from './lib/prismaClient';
 import { errorHandler } from './middleware/errorHandler';
+import { databaseErrorHandler } from './middleware/databaseErrorHandler';
 import { readOnlyMiddleware } from './middleware/readOnlyMiddleware';
 import vehicleRoutes from './routes/vehicle.routes';
 import contentRoutes from './routes/content.routes';
@@ -12,8 +13,8 @@ import contentRoutes from './routes/content.routes';
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// Initialize Prisma Client
-export const prisma = new PrismaClient();
+// Prisma Client is initialized in ./lib/prismaClient.ts
+export { prisma };
 
 // Middleware
 app.use(helmet());
@@ -34,6 +35,7 @@ app.get('/health', (req, res) => {
 });
 
 // Error handling middleware
+app.use(databaseErrorHandler);
 app.use(errorHandler);
 
 // Start server

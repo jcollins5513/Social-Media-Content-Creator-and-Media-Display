@@ -11,31 +11,31 @@ datasource db {
 }
 
 model Vehicle {
-  id                     String         @id @default(cuid())
-  stockNumber           String         @unique
-  vin                    String         @unique
-  year                   Int
-  make                   String
-  model                  String
-  price                  Int
-  mileage                Int
-  features               String[]
-  images                 String[]
-  createdAt              DateTime       @default(now())
-  updatedAt              DateTime       @updatedAt
-  color                  String
-  trim                   String?
-  engine                 String?
-  transmission          String?
-  description           String
-  sourceUrl             String?
-  facebookPostId        String?
-  lastFacebookPostDate  DateTime?
+  id                   String         @id @default(cuid())
+  stockNumber          String         @unique
+  vin                  String         @unique
+  year                 Int
+  make                 String
+  model                String
+  price                Int
+  mileage              Int
+  features             String[]
+  images               String[]
+  createdAt            DateTime       @default(now())
+  updatedAt            DateTime       @updatedAt
+  color                String
+  trim                 String?
+  engine               String?
+  transmission         String?
+  description          String
+  sourceUrl            String?
+  facebookPostId       String?
+  lastFacebookPostDate DateTime?
   lastMarketplacePostDate DateTime?
-  carfaxHighlights      Json?
-  bodyStyle             String?
-  vehicleClass          String?        @default("SUV")
-  status                VehicleStatus  @default(available)
+  carfaxHighlights     Json?
+  bodyStyle            String?
+  vehicleClass         String?        @default("SUV")
+  status               VehicleStatus  @default(available)
 }
 
 enum VehicleStatus {

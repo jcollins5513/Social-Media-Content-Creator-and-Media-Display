@@ -14,6 +14,10 @@
     "moduleDetection": "force",
     "noEmit": true,
     "jsx": "react-jsx",
+    "jsxImportSource": "react",
+
+    /* Linting */
+    "forceConsistentCasingInFileNames": true,
 
     /* Linting */
     "strict": true,
