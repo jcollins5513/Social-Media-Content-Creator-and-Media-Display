@@ -4,6 +4,7 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import { PrismaClient } from '@prisma/client';
 import { errorHandler } from './middleware/errorHandler';
+import { readOnlyMiddleware } from './middleware/readOnlyMiddleware';
 import vehicleRoutes from './routes/vehicle.routes';
 import contentRoutes from './routes/content.routes';
 
@@ -19,6 +20,9 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json());
 app.use(morgan('dev'));
+
+// Apply read-only middleware to all routes by default
+app.use(readOnlyMiddleware);
 
 // API Routes
 app.use('/api/vehicles', vehicleRoutes);
