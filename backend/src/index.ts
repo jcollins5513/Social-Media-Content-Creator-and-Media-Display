@@ -1,0 +1,52 @@
+import express from 'express';
+import cors from 'cors';
+import helmet from 'helmet';
+import morgan from 'morgan';
+import { PrismaClient } from '@prisma/client';
+import { errorHandler } from './middleware/errorHandler';
+import vehicleRoutes from './routes/vehicle.routes';
+import contentRoutes from './routes/content.routes';
+
+// Initialize Express app
+const app = express();
+const PORT = process.env.PORT || 3001;
+
+// Initialize Prisma Client
+export const prisma = new PrismaClient();
+
+// Middleware
+app.use(helmet());
+app.use(cors());
+app.use(express.json());
+app.use(morgan('dev'));
+
+// API Routes
+app.use('/api/vehicles', vehicleRoutes);
+app.use('/api/content', contentRoutes);
+
+// Health check endpoint
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'ok', message: 'Server is running' });
+});
+
+// Error handling middleware
+app.use(errorHandler);
+
+// Start server
+const server = app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
+
+// Handle unhandled promise rejections
+process.on('unhandledRejection', (err: Error) => {
+  console.error('Unhandled Rejection:', err);
+  server.close(() => process.exit(1));
+});
+
+// Handle uncaught exceptions
+process.on('uncaughtException', (err: Error) => {
+  console.error('Uncaught Exception:', err);
+  server.close(() => process.exit(1));
+});
+
+export default app;
