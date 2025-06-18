@@ -51,6 +51,29 @@ const VehicleDetailPage = () => {
     }
   };
 
+  const handleGenerateAllContent = async () => {
+    if (!id) return;
+
+    try {
+      setIsGenerating(true);
+      const response = await api.generateAllContent(id, selectedTemplate);
+      const content = response.data.data.generatedContent || {};
+      setGeneratedContent({
+        facebook: content.facebook || '',
+        instagram: content.instagram || '',
+        twitter: content.x || '',
+        youtube: content.youtubeScript || '',
+        email: JSON.stringify(content.email, null, 2) || '',
+      });
+      setActiveTab('content');
+    } catch (err) {
+      console.error('Error generating all content:', err);
+      alert('Failed to generate content. Please try again.');
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
   if (isLoading) {
     return <VehicleDetailSkeleton />;
   }
@@ -273,8 +296,17 @@ const VehicleDetailPage = () => {
             </div>
             
             <div className="px-4 py-5 sm:p-6">
-              {activeTab === 'details' ? (
+                {activeTab === 'details' ? (
                 <div className="space-y-4">
+                  <div>
+                    <button
+                      onClick={handleGenerateAllContent}
+                      disabled={isGenerating}
+                      className="w-full inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {isGenerating ? 'Generating...' : 'Generate All Content'}
+                    </button>
+                  </div>
                   <div>
                     <h4 className="text-sm font-medium text-gray-700 mb-2">Social Media Content</h4>
                     <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">

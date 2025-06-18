@@ -53,7 +53,11 @@ class ApiClient {
   }
 
   public async generateEmailContent(vehicleId: string, templateType: string): Promise<AxiosResponse> {
-    return this.client.post(`/content/vehicles/${vehicleId}/email`, { templateType });
+    return this.client.post(`/content/vehicles/${vehicleId}/email`, { emailType: templateType });
+  }
+
+  public async generateAllContent(vehicleId: string, emailScenario?: string): Promise<AxiosResponse> {
+    return this.client.post(`/vehicles/${vehicleId}/generate-all-content`, { emailScenario });
   }
 }
 
