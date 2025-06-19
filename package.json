@@ -1,0 +1,29 @@
+{
+  "name": "social-media-content-creator-and-media-display",
+  "version": "1.0.0",
+  "description": "��#\u0000 \u0000S\u0000o\u0000c\u0000i\u0000a\u0000l\u0000 \u0000M\u0000e\u0000d\u0000i\u0000a\u0000 \u0000C\u0000o\u0000n\u0000t\u0000e\u0000n\u0000t\u0000 \u0000C\u0000r\u0000e\u0000a\u0000t\u0000o\u0000r\u0000 \u0000a\u0000n\u0000d\u0000 \u0000M\u0000e\u0000d\u0000i\u0000a\u0000 \u0000D\u0000i\u0000s\u0000p\u0000l\u0000a\u0000y\u0000\r\u0000 \u0000",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "test": "vitest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "next": "^15.3.4",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "24.0.3",
+    "@types/react": "19.1.8",
+    "eslint": "^9.29.0",
+    "eslint-config-next": "^15.3.4",
+    "vitest": "^3.2.4"
+  }
+}
