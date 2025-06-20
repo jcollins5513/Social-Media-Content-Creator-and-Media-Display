@@ -95,7 +95,7 @@ const generateEmailForVehicle = (
       }
       
       body += `💡 *Why You'll Love It:*\n`;
-      body += `${vehicle.features.slice(0, 3).map(f => `✓ ${f}`).join('\n')}\n\n`;
+      body += `${vehicle.features.slice(0, 3).map((f: string) => `✓ ${f}`).join('\n')}\n\n`;
       body += `⏳ *This deal won't last long!* Contact us today to schedule your test drive.\n\n`;
       body += `Best regards,\nYour Dealership Team`;
       break;
@@ -124,7 +124,7 @@ const generateEmailForVehicle = (
       }
       
       body += `🎁 *${holiday} Special Features:*\n`;
-      body += `${vehicle.features.slice(0, 4).map(f => `• ${f}`).join('\n')}\n\n`;
+      body += `${vehicle.features.slice(0, 4).map((f: string) => `• ${f}`).join('\n')}\n\n`;
       body += `📅 This special ${holiday} offer is only available for a limited time. Don't miss out!\n\n`;
       body += `Warm ${holiday} wishes,\nYour Dealership Team`;
       break;
@@ -143,7 +143,7 @@ const generateEmailForVehicle = (
       }
       
       body += `💎 *Notable Features:*\n`;
-      body += `${vehicle.features.slice(0, 5).map(f => `• ${f}`).join('\n')}\n\n`;
+      body += `${vehicle.features.slice(0, 5).map((f: string) => `• ${f}`).join('\n')}\n\n`;
       body += `📞 Contact us today to schedule a test drive - these vehicles are selling fast!\n\n`;
       body += `Best regards,\nYour Dealership Team`;
       break;
@@ -163,7 +163,7 @@ const generateEmailForVehicle = (
       }
       
       body += `🔧 *Key Features:*\n`;
-      body += `${vehicle.features.slice(0, 5).map(f => `• ${f}`).join('\n')}\n\n`;
+      body += `${vehicle.features.slice(0, 5).map((f: string) => `• ${f}`).join('\n')}\n\n`;
       body += `${customMessage ? customMessage + '\n\n' : ''}`;
       body += `Please let us know if you'd like to schedule a test drive or if you have any questions. We're here to help!\n\n`;
       body += `Best regards,\nYour Dealership Team`;
