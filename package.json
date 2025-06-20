@@ -16,12 +16,12 @@
   "type": "commonjs",
   "dependencies": {
     "next": "^15.3.4",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@types/node": "24.0.3",
-    "@types/react": "19.1.8",
+    "@types/react": "18.2.45",
     "eslint": "^9.29.0",
     "eslint-config-next": "^15.3.4",
     "vitest": "^3.2.4"
